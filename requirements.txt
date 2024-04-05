@@ -1,3 +1,17 @@
+# CLI
+cloup~=3.0.5
+click~=8.1.7
+inflect~=7.0.0
+colorama~=0.4.6
+tqdm~=4.66.2
+humanfriendly~=10.0
+# Internals
+PyYAML~=6.0.1
+requests~=2.31.0
+# Legacy
 Pillow>=10
 spotipy>=2.21.1
 yandex-music>=2.0.0
+#Testing
+pytest~=8.1.1
+pyhamcrest~=2.1.0
