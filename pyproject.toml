@@ -45,6 +45,9 @@ Documentation = "https://github.com/dstaroff/ym2s#readme"
 Issues = "https://github.com/dstaroff/ym2s/issues"
 Source = "https://github.com/dstaroff/ym2s"
 
+[project.scripts]
+ym2s = "ym2s.cli:main"
+
 [tool.mypy]
 ignore_missing_imports = true
 disallow_incomplete_defs = true
