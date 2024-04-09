@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import TYPE_CHECKING
 
 import click
 import cloup
@@ -11,6 +12,9 @@ from ym2s.cli.option import ym_token_option
 from ym2s.client.yandex import YMClient
 from ym2s.importer import ExportedSubjects
 from ym2s.model.serialization import SerializationBackend
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class SubjectEnum(str, Enum):
@@ -45,7 +49,7 @@ class SubjectEnum(str, Enum):
     required=True,
 )
 @cloup.pass_context
-def cmd_export(c: cloup.Context, ym_token: str, output: click.Path, subjects: list[SubjectEnum]):
+def cmd_export(c: cloup.Context, ym_token: str, output: Path, subjects: list[SubjectEnum]):
     backend = None
     for out_format in (SerializationBackend.JSON, SerializationBackend.YAML):
         if str(output).endswith(f'.{out_format}'):

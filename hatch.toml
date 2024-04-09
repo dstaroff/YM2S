@@ -36,3 +36,12 @@ cov = [
   "test-cov",
   "cov-report",
 ]
+
+[envs.types]
+dependencies = [
+  "mypy>=1.0.0",
+  "pyhamcrest",
+]
+
+[envs.types.scripts]
+check = "mypy --config-file ./mypy.ini --install-types --non-interactive {args:src/ym2s tests}"

@@ -45,3 +45,9 @@ dependencies = [
 Documentation = "https://github.com/dstaroff/ym2s#readme"
 Issues = "https://github.com/dstaroff/ym2s/issues"
 Source = "https://github.com/dstaroff/ym2s"
+
+[tool.mypy]
+ignore_missing_imports = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+exclude = ['tests/staging']
