@@ -1,7 +1,13 @@
 [version]
 path = "src/ym2s/__about__.py"
 
+[envs.default]
+type = "virtual"
+path = "venv"
+
 [envs.test]
+type = "virtual"
+path = "venv"
 dependencies = [
   "coverage[toml]",
   "mypy",
