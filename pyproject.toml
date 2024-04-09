@@ -26,19 +26,18 @@ classifiers = [
 ]
 dependencies = [
   # CLI
-  "cloup",
-  "click",
-  "inflect",
-  "colorama",
-  "tqdm",
-  "humanfriendly",
+  "cloup~=3.0.5",
+  "click~=8.1.7",
+  "inflect~=7.2.0",
+  "colorama~=0.4.6",
+  "humanfriendly~=10.0",
   # Internals
-  "PyYAML",
-  "requests",
+  "PyYAML~=6.0.1",
+  "requests~=2.31.0",
   # Legacy
   "Pillow",
-  "spotipy",
-  "yandex-music",
+  "spotipy~=2.23.0",
+  "yandex-music~=2.2.0",
 ]
 
 [project.urls]
