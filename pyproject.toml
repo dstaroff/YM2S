@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ym2s"
+dynamic = ["version"]
+description = 'Yandex Music to Spotify syncer'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Dmitry Starov", email = "dmitry.staroff@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  # CLI
+  "cloup",
+  "click",
+  "inflect",
+  "colorama",
+  "tqdm",
+  "humanfriendly",
+  # Internals
+  "PyYAML",
+  "requests",
+  # Legacy
+  "Pillow",
+  "spotipy",
+  "yandex-music",
+]
+
+[project.urls]
+Documentation = "https://github.com/dstaroff/ym2s#readme"
+Issues = "https://github.com/dstaroff/ym2s/issues"
+Source = "https://github.com/dstaroff/ym2s"
