@@ -1,12 +1,6 @@
 [version]
 path = "src/ym2s/__about__.py"
 
-[[envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
-[envs.default]
-dependencies = []
-
 [envs.test]
 dependencies = [
   "coverage[toml]",
@@ -15,6 +9,9 @@ dependencies = [
   "pytest",
   "ruff",
 ]
+
+[[envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [envs.test.scripts]
 test-lint = "ruff check {args:src/ym2s tests}"

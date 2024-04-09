@@ -50,14 +50,7 @@ class ExportedSubjects:
 
         self._logger.debug('Serializing subjects to %s with %s backend', path, backend)
         with path.open(mode='w', encoding='utf-8') as file:
-            match backend:
-                case SerializationBackend.JSON:
-                    json.dump(subjects, file, ensure_ascii=False, indent=2, sort_keys=True)
-                case SerializationBackend.YAML:
-                    yaml.dump(
-                        subjects,
-                        file,
-                        allow_unicode=True,
-                        encoding='utf-8',
-                        sort_keys=True,
-                    )
+            if backend == SerializationBackend.JSON:
+                json.dump(subjects, file, ensure_ascii=False, indent=2, sort_keys=True)
+            elif backend == SerializationBackend.YAML:
+                yaml.dump(subjects, file, allow_unicode=True, encoding='utf-8', sort_keys=True)
