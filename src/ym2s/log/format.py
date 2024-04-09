@@ -1,12 +1,13 @@
 import logging
+from typing import ClassVar
 
 from colorama import Fore
 
 
 class ColoredFormatter(logging.Formatter):
-    FORMAT = "%(message)s"
+    FORMAT = '%(message)s'
 
-    FORMATS = {
+    FORMATS: ClassVar = {
         logging.DEBUG: Fore.WHITE + FORMAT + Fore.RESET,
         logging.INFO: Fore.LIGHTWHITE_EX + FORMAT + Fore.RESET,
         logging.WARNING: Fore.LIGHTYELLOW_EX + FORMAT + Fore.RESET,

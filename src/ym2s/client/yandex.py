@@ -1,6 +1,11 @@
-import logging
+from __future__ import annotations
 
-import inflect
+import logging
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import inflect
+
 import yandex_music as ym
 
 from ym2s.log.decorator import log_operation
@@ -21,45 +26,47 @@ class YMClient:
     def tracks(self) -> list[Track]:
         track_metas: list[ym.TrackShort] = self._client.users_likes_tracks().tracks
         self._logger.info(
-            f'Got {len(track_metas)} liked {self._ie.plural_noun("track", len(track_metas))}'
+            'Got %(track_count)s liked %(track_word)s',
+            extra={
+                'track_count': len(track_metas),
+                'track_word': self._ie.plural_noun('track', len(track_metas)),
+            },
         )
 
-        filtered_track_metas = [
-            track for track in track_metas if track.album_id is None
-        ]
+        filtered_track_metas = [track for track in track_metas if track.album_id is None]
         if len(filtered_track_metas) > 0:
-            filtered_tracks = self._client.tracks(
-                [track.track_id for track in filtered_track_metas]
-            )
+            filtered_tracks = self._client.tracks([track.track_id for track in filtered_track_metas])
             filtered_count = len(filtered_tracks)
             self._logger.warning(
-                f'{len(filtered_track_metas)} {self._ie.plural_noun("track", len(filtered_track_metas))} '
-                + f'{self._ie.plural_verb("have", filtered_count)} no album ID: ',
+                '%(track_count)s %(track_word)s %(have_word)s no album ID: %(tracks)s',
+                extra={
+                    'track_count': len(filtered_track_metas),
+                    'track_word': self._ie.plural_noun('track', len(filtered_track_metas)),
+                    'have_word': self._ie.plural_verb('have', filtered_count),
+                    'tracks': [f'  {", ".join(track.artistsName())} — {track.title}' for track in filtered_tracks],
+                },
             )
-            for track in [
-                f'  {", ".join(track.artistsName())} — {track.title}'
-                for track in filtered_tracks
-            ]:
-                self._logger.warning(track)
 
             self._logger.warning(
-                'Probably, '
-                + f'{self._ie.plural_noun("it", filtered_count)} {self._ie.plural_verb("was", filtered_count)} '
-                + 'uploaded by user'
+                'Probably, %(it_word)s %(was_word)s uploaded by user',
+                extra={
+                    'it_word': self._ie.plural_noun('it', filtered_count),
+                    'was_word': self._ie.plural_verb('was', filtered_count),
+                },
             )
 
         tracks: list[Track] = [
             Track(artists=track.artists_name(), title=track.title)
             for track in self._client.tracks(
-                [
-                    track_meta.track_id
-                    for track_meta in track_metas
-                    if track_meta.album_id is not None
-                ]
+                [track_meta.track_id for track_meta in track_metas if track_meta.album_id is not None],
             )
         ]
         self._logger.info(
-            f'Fetched {len(tracks)} {self._ie.plural_noun("track", len(tracks))}'
+            'Fetched %(track_count)s %(track_word)s',
+            extra={
+                'track_count': len(tracks),
+                'track_word': self._ie.plural_noun('track', len(tracks)),
+            },
         )
 
         return tracks

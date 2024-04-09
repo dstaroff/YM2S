@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any
 
@@ -16,7 +18,7 @@ class Track(SerializerMixin):
         }
 
     @classmethod
-    def deserialize(cls, obj: dict[str, Any]) -> 'Track':
+    def deserialize(cls, obj: dict[str, Any]) -> Track:
         return cls(
             artists=obj['artists'],
             title=obj['title'],

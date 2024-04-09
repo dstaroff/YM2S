@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -8,7 +10,6 @@ class SerializerMixin(ABC):
         """
         Encodes object to internal dict representation
         """
-        pass
 
     @classmethod
     @abstractmethod
@@ -16,4 +17,3 @@ class SerializerMixin(ABC):
         """
         Decodes object from internal dict representation
         """
-        pass

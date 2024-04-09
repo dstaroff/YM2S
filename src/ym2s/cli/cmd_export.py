@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 import click
@@ -29,9 +31,7 @@ class SubjectEnum(str, Enum):
     '-s',
     '--subjects',
     help='Subject to be exported.',
-    type=cloup.Choice(
-        choices=(SubjectEnum.All, SubjectEnum.Tracks), case_sensitive=False
-    ),
+    type=cloup.Choice(choices=(SubjectEnum.All, SubjectEnum.Tracks), case_sensitive=False),
     multiple=True,
     default=[SubjectEnum.All],
 )
@@ -39,15 +39,13 @@ class SubjectEnum(str, Enum):
     '-o',
     '--output',
     help='Path to the file to save exported items to. Format must be one of '
-    + ', '.join((SerializationBackend.JSON, SerializationBackend.YAML))
+    + ', '.join((SerializationBackend.JSON, SerializationBackend.YAML))  # noqa: FLY002
     + '.',
     type=cloup.types.file_path(writable=True, resolve_path=True),
     required=True,
 )
 @cloup.pass_context
-def cmd_export(
-    c: cloup.Context, ym_token: str, output: click.Path, subjects: list[SubjectEnum]
-):
+def cmd_export(c: cloup.Context, ym_token: str, output: click.Path, subjects: list[SubjectEnum]):
     backend = None
     for out_format in (SerializationBackend.JSON, SerializationBackend.YAML):
         if str(output).endswith(f'.{out_format}'):
@@ -55,7 +53,7 @@ def cmd_export(
     if backend is None:
         click.echo(
             'Unsupported output format. Must be one of '
-            + ', '.join((SerializationBackend.JSON, SerializationBackend.YAML)),
+            + ', '.join((SerializationBackend.JSON, SerializationBackend.YAML)),  # noqa: FLY002
             err=True,
         )
         c.exit(1)
@@ -85,4 +83,4 @@ def cmd_export(
             exported_subjects.tracks = tracks
 
     with AutomaticSpinner(f'Writing subjects to {output}'):
-        exported_subjects.dump(str(output), backend)
+        exported_subjects.dump(output, backend)

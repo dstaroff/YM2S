@@ -1,3 +1,4 @@
+from typing import ClassVar
 from unittest import TestCase
 
 from hamcrest import assert_that, equal_to
@@ -6,11 +7,11 @@ from ym2s.model.track import Track
 
 
 class TrackTest(TestCase):
-    track_obj = Track(
+    track_obj: ClassVar = Track(
         artists=['a', 'b'],
         title='c',
     )
-    track_dict = {
+    track_dict: ClassVar = {
         'artists': ['a', 'b'],
         'title': 'c',
     }
