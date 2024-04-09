@@ -1,0 +1,18 @@
+[run]
+source_pkgs = ["ym2s", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/ym2s/__about__.py",
+]
+
+[paths]
+ym2s = ["src/ym2s", "*/ym2s/src/ym2s"]
+tests = ["tests", "*/ym2s/tests"]
+
+[report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]

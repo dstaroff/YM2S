@@ -17,3 +17,22 @@ dependencies = [
 check = "ruff check {args:src/ym2s tests}"
 fix = "ruff check --fix {args:src/ym2s tests}"
 format = "ruff format {args:src/ym2s tests}"
+
+[envs.test]
+dependencies = [
+  "coverage[toml]",
+  "pytest",
+  "pyhamcrest",
+]
+
+[envs.test.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
