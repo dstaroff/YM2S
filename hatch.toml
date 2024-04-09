@@ -7,41 +7,38 @@ python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 [envs.default]
 dependencies = []
 
-[envs.lint]
-skip-install = true
-dependencies = [
-  "ruff",
-]
-
-[envs.lint.scripts]
-check = "ruff check {args:src/ym2s tests}"
-fix = "ruff check --fix {args:src/ym2s tests}"
-format = "ruff format {args:src/ym2s tests}"
-
 [envs.test]
 dependencies = [
   "coverage[toml]",
-  "pytest",
+  "mypy",
   "pyhamcrest",
+  "pytest",
+  "ruff",
 ]
 
 [envs.test.scripts]
-test = "pytest {args:tests}"
-test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
+test-lint = "ruff check {args:src/ym2s tests}"
+test-pytest = "pytest {args:tests}"
+test-mypy = "mypy --config-file ./mypy.ini --install-types --non-interactive {args:src/ym2s tests}"
+check = [
+  "test-lint",
+  "test-pytest",
+  "test-mypy",
+]
+
+lint-format = "ruff format {args:src/ym2s tests}"
+lint-fix = "ruff check --fix {args:src/ym2s tests}"
+lint = [
+  "lint-format",
+  "lint-fix",
+]
+
+test-coverage = "coverage run -m pytest {args:tests}"
+coverage-report = [
   "- coverage combine",
   "coverage report",
 ]
 cov = [
-  "test-cov",
-  "cov-report",
+  "test-coverage",
+  "coverage-report",
 ]
-
-[envs.types]
-dependencies = [
-  "mypy>=1.0.0",
-  "pyhamcrest",
-]
-
-[envs.types.scripts]
-check = "mypy --config-file ./mypy.ini --install-types --non-interactive {args:src/ym2s tests}"
