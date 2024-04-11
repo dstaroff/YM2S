@@ -1,3 +1,3 @@
-"""YM2S package version."""
+"""YM2S version."""
 
 __version__ = '0.1.0'

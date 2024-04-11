@@ -1,9 +1,11 @@
+"""CLI root command."""
+
 import cloup
 import inflect
 
-from ym2s.cli.cmd_export import cmd_export
+from ym2s.cli.cmd import export_cmd
 from ym2s.cli.context import CONTEXT_SETTINGS, Context, set_context
-from ym2s.log.root import get_root_logger
+from ym2s.core.log import get_root_logger
 
 
 @cloup.group(
@@ -12,6 +14,7 @@ from ym2s.log.root import get_root_logger
 )
 @cloup.pass_context
 def cli(ctx: cloup.Context):
+    """CLI root command."""
     logger = get_root_logger()
     set_context(
         ctx,
@@ -22,4 +25,4 @@ def cli(ctx: cloup.Context):
     )
 
 
-cli.add_command(cmd_export)
+cli.add_command(export_cmd)

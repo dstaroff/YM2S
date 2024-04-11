@@ -1,3 +1,5 @@
+"""Container for subjects being synced."""
+
 from __future__ import annotations
 
 import json
@@ -5,7 +7,7 @@ from typing import TYPE_CHECKING
 
 import yaml
 
-from ym2s.model.serialization import SerializationBackend
+from ym2s.core.serialization import SerializationBackend
 
 if TYPE_CHECKING:
     import logging
@@ -13,10 +15,12 @@ if TYPE_CHECKING:
 
     import inflect
 
-    from ym2s.model.track import Track
+    from ym2s.core.subject.track import Track
 
 
-class ExportedSubjects:
+class Subjects:
+    """Subjects being synced."""
+
     def __init__(self, ie: inflect.engine, logger: logging.Logger):
         self._ie = ie
         self._logger = logger.getChild('Subjects')
@@ -25,16 +29,16 @@ class ExportedSubjects:
 
     @property
     def tracks(self) -> list[Track]:
+        """Get tracks."""
         return self._tracks
 
     @tracks.setter
-    def tracks(self, tracks: list[Track]):
+    def tracks(self, tracks: list[Track]) -> None:
+        """Set tracks."""
         self._tracks = tracks
 
     def dump(self, path: Path, backend: SerializationBackend):
-        """
-        Dumps subjects into file on path using specified serialization backend
-        """
+        """Dump subjects into file on path using specified serialization backend."""
         subjects = {}
 
         if len(self.tracks) > 0:

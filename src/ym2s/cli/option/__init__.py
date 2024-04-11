@@ -1,4 +1,4 @@
-"""YM2S CLI common options package."""
+"""Common CLI options."""
 
 from .ym_token import ym_token_option
 

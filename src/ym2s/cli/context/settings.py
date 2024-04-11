@@ -1,3 +1,5 @@
+"""Settings to be applied for the whole CLI."""
+
 from cloup import Context, HelpFormatter, HelpTheme
 
 CONTEXT_SETTINGS = Context.settings(

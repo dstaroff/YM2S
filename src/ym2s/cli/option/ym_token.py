@@ -1,3 +1,5 @@
+"""CLI option requiring Yandex Music token."""
+
 import cloup
 
 ym_token_option = cloup.option(

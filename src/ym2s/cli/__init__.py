@@ -1,7 +1,8 @@
-"""YM2S CLI."""
+"""YM2S CLI module."""
 
-from ym2s.cli.grp_ym2s import cli
+from .root import cli
 
 
 def main():
+    """CLI entry-point."""
     cli.main()

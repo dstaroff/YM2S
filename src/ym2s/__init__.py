@@ -1,1 +1,1 @@
-"""YM2S package."""
+"""Yandex Music to Spotify syncer."""

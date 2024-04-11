@@ -1,3 +1,5 @@
+"""Export command."""
+
 from __future__ import annotations
 
 from enum import Enum
@@ -9,15 +11,17 @@ from humanfriendly.terminal.spinners import AutomaticSpinner
 
 from ym2s.cli.context import get_context
 from ym2s.cli.option import ym_token_option
-from ym2s.client.yandex import YMClient
-from ym2s.importer import ExportedSubjects
-from ym2s.model.serialization import SerializationBackend
+from ym2s.core.client import YMClient
+from ym2s.core.serialization import SerializationBackend
+from ym2s.core.subject import Subjects
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class SubjectEnum(str, Enum):
+class Subject(str, Enum):
+    """Subjects available for an export."""
+
     All = 'all'
     Tracks = 'tracks'
 
@@ -34,10 +38,11 @@ class SubjectEnum(str, Enum):
 @cloup.option(
     '-s',
     '--subjects',
+    'subjects_to_export',
     help='Subject to be exported.',
-    type=cloup.Choice(choices=(SubjectEnum.All, SubjectEnum.Tracks), case_sensitive=False),
+    type=cloup.Choice(choices=(Subject.All, Subject.Tracks), case_sensitive=False),
     multiple=True,
-    default=[SubjectEnum.All],
+    default=[Subject.All],
 )
 @cloup.option(
     '-o',
@@ -49,7 +54,8 @@ class SubjectEnum(str, Enum):
     required=True,
 )
 @cloup.pass_context
-def cmd_export(c: cloup.Context, ym_token: str, output: Path, subjects: list[SubjectEnum]):
+def export_cmd(c: cloup.Context, ym_token: str, output: Path, subjects_to_export: list[Subject]):
+    """Export subjects."""
     backend = None
     for out_format in (SerializationBackend.JSON, SerializationBackend.YAML):
         if str(output).endswith(f'.{out_format}'):
@@ -62,16 +68,16 @@ def cmd_export(c: cloup.Context, ym_token: str, output: Path, subjects: list[Sub
         )
         c.exit(1)
 
-    if SubjectEnum.All in subjects:
-        if len(subjects) > 1:
+    if Subject.All in subjects_to_export:
+        if len(subjects_to_export) > 1:
             click.echo(
-                f'Other subjects could not be specified if {SubjectEnum.All} provided',
+                f'Other subjects could not be specified if {Subject.All} provided',
                 err=True,
             )
             c.exit(1)
 
-        subjects = [
-            SubjectEnum.Tracks,
+        subjects_to_export = [
+            Subject.Tracks,
         ]
 
     ctx = get_context(c)
@@ -79,12 +85,12 @@ def cmd_export(c: cloup.Context, ym_token: str, output: Path, subjects: list[Sub
     ym_client = YMClient(token=ym_token, ie=ctx.inflect_engine, logger=ctx.logger)
     ym_client.init()
 
-    exported_subjects = ExportedSubjects(ctx.inflect_engine, ctx.logger)
+    subjects = Subjects(ctx.inflect_engine, ctx.logger)
 
-    if SubjectEnum.Tracks in subjects:
+    if Subject.Tracks in subjects_to_export:
         with AutomaticSpinner('Exporting tracks'):
             tracks = ym_client.tracks()
-            exported_subjects.tracks = tracks
+            subjects.tracks = tracks
 
     with AutomaticSpinner(f'Writing subjects to {output}'):
-        exported_subjects.dump(output, backend)
+        subjects.dump(output, backend)

@@ -1,10 +1,10 @@
+"""Serialization backend."""
+
 from enum import Enum
 
 
 class SerializationBackend(str, Enum):
-    """
-    Backend to use for data serialization
-    """
+    """Backend to use for data serialization."""
 
     JSON = 'json'
     YAML = 'yaml'

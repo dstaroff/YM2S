@@ -1,19 +1,22 @@
+"""Serializer interface."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import Any
 
 
-class SerializerMixin(ABC):
+class ISerializer(ABC):
+    """Serializer interface.
+
+    Requires an object to be serializable to/from dict.
+    """
+
     @abstractmethod
     def serialize(self) -> dict[str, Any]:
-        """
-        Encodes object to internal dict representation
-        """
+        """Encode object as dict."""
 
     @classmethod
     @abstractmethod
     def deserialize(cls, obj: dict[str, Any]):
-        """
-        Decodes object from internal dict representation
-        """
+        """Decode object from dict."""
