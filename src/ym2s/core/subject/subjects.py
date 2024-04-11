@@ -42,12 +42,7 @@ class Subjects:
         subjects = {}
 
         if len(self.tracks) > 0:
-            self._logger.debug(
-                'Serializing %(track_word)s',
-                extra={
-                    'track_word': self._ie.plural_noun('track', len(self.tracks)),
-                },
-            )
+            self._logger.debug('Serializing %s', self._ie.plural_noun('track', len(self.tracks)))
             subjects['tracks'] = [track.serialize() for track in self.tracks]
         else:
             self._logger.debug('No tracks to serialize')
