@@ -14,7 +14,7 @@ from ym2s.core.log import get_root_logger
 )
 @cloup.pass_context
 def cli(ctx: cloup.Context):
-    """CLI root command."""
+    """Yandex Music to Spotify syncer."""
     logger = get_root_logger()
     set_context(
         ctx,
