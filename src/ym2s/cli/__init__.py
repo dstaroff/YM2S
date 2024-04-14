@@ -1,4 +1,4 @@
-"""YM2S CLI module."""
+"""YM2S CLI package."""
 
 from .root import cli
 

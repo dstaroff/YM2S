@@ -11,6 +11,6 @@ CONTEXT_SETTINGS = Context.settings(
     show_default=True,
     auto_envvar_prefix='YM2S',
     formatter_settings=HelpFormatter.settings(
-        theme=HelpTheme.light(),
+        theme=HelpTheme.dark(),
     ),
 )

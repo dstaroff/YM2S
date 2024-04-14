@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from enum import Enum
 from typing import TYPE_CHECKING
 
 import click
@@ -14,35 +13,33 @@ from ym2s.cli.option import ym_token_option
 from ym2s.core.client import YMClient
 from ym2s.core.serialization import SerializationBackend
 from ym2s.core.subject import Subjects
+from ym2s.core.subject.enum import SORT_BY_VARIANTS, SUBJECTS_ALL, SUBJECT_VARIANTS, SubjectSortBy, SubjectType
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class Subject(str, Enum):
-    """Subjects available for an export."""
-
-    All = 'all'
-    Tracks = 'tracks'
-
-    def __str__(self) -> str:
-        return self.value
-
-
 @cloup.command(
     'export',
-    short_help='Exports subjects from Yandex Music.',
-    help='Exports subjects (liked tracks, albums, etc., and playlists) from Yandex Music.',
+    short_help='Export subjects from Yandex Music into a file.',
+    help='Export subjects (liked tracks, albums, etc., and playlists) from Yandex Music into a file.',
 )
 @ym_token_option
 @cloup.option(
-    '-s',
+    '-S',
     '--subjects',
     'subjects_to_export',
     help='Subject to be exported.',
-    type=cloup.Choice(choices=(Subject.All, Subject.Tracks), case_sensitive=False),
+    type=cloup.Choice(choices=SUBJECT_VARIANTS, case_sensitive=False),
     multiple=True,
-    default=[Subject.All],
+    default=[SubjectType.All],
+)
+@cloup.option(
+    '-s',
+    '--sort-by',
+    help='Subject sorting order.',
+    type=cloup.Choice(choices=SORT_BY_VARIANTS, case_sensitive=False),
+    default=SubjectSortBy.LexicalAsc,
 )
 @cloup.option(
     '-o',
@@ -54,7 +51,13 @@ class Subject(str, Enum):
     required=True,
 )
 @cloup.pass_context
-def export_cmd(c: cloup.Context, ym_token: str, output: Path, subjects_to_export: list[Subject]):
+def export_cmd(
+    c: cloup.Context,
+    ym_token: str,
+    subjects_to_export: list[SubjectType],
+    sort_by: SubjectSortBy,
+    output: Path,
+):
     """Export subjects."""
     backend = None
     for out_format in (SerializationBackend.JSON, SerializationBackend.YAML):
@@ -68,17 +71,15 @@ def export_cmd(c: cloup.Context, ym_token: str, output: Path, subjects_to_export
         )
         c.exit(1)
 
-    if Subject.All in subjects_to_export:
+    if SubjectType.All in subjects_to_export:
         if len(subjects_to_export) > 1:
             click.echo(
-                f'Other subjects could not be specified if {Subject.All} provided',
+                f'Other subjects could not be specified if {SubjectType.All} provided',
                 err=True,
             )
             c.exit(1)
 
-        subjects_to_export = [
-            Subject.Tracks,
-        ]
+        subjects_to_export = list(SUBJECTS_ALL)
 
     ctx = get_context(c)
 
@@ -86,11 +87,31 @@ def export_cmd(c: cloup.Context, ym_token: str, output: Path, subjects_to_export
     ym_client.init()
 
     subjects = Subjects(ctx.inflect_engine, ctx.logger)
-
-    if Subject.Tracks in subjects_to_export:
-        with AutomaticSpinner('Exporting tracks'):
-            tracks = ym_client.tracks()
-            subjects.tracks = tracks
+    for subject in [
+        {
+            'name': SubjectType.Artists,
+            'getter': ym_client.artists,
+            'setter': subjects.set_artists,
+        },
+        {
+            'name': SubjectType.Albums,
+            'getter': ym_client.albums,
+            'setter': subjects.set_albums,
+        },
+        {
+            'name': SubjectType.Tracks,
+            'getter': ym_client.tracks,
+            'setter': subjects.set_tracks,
+        },
+        {
+            'name': SubjectType.Playlists,
+            'getter': ym_client.playlists,
+            'setter': subjects.set_playlists,
+        },
+    ]:
+        if subject['name'] in subjects_to_export:
+            with AutomaticSpinner(f'Exporting {subject["name"]}'):
+                subject['setter'](subject['getter']())
 
     with AutomaticSpinner(f'Writing subjects to {output}'):
-        subjects.dump(output, backend)
+        subjects.dump(output, backend, sort_by)

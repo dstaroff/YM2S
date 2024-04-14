@@ -1,4 +1,4 @@
-"""Logging module."""
+"""Logging package."""
 
 from .colored_formatter import ColoredFormatter
 from .decorator import log_operation

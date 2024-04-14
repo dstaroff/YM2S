@@ -1,4 +1,4 @@
-"""Clients module."""
+"""Client package."""
 
 from .yandex import YMClient
 

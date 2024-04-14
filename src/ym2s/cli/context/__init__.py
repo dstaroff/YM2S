@@ -1,4 +1,4 @@
-"""Typed CLI context handling module."""
+"""Typed CLI context handling package."""
 
 from cloup import Context as CloupContext
 

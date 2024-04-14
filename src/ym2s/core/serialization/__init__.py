@@ -1,4 +1,4 @@
-"""Model serialization module."""
+"""Model serialization package."""
 
 from .backend import SerializationBackend
 from .serializer import ISerializer
